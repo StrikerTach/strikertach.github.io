@@ -1,0 +1,67 @@
+<meta charset="UTF-8">
+<html>
+
+<body>
+    <div id="demo" hidden="true"></div>
+    <h1>Курс валют</h1>
+
+    <div id="usd-exchange">
+        <h3>Доллар</h3>
+        <p></p>
+    </div>
+
+    <div id="eur-exchange">
+        <h3>Евро</h3>
+        <p></p>
+    </div>
+    <div>
+        <h3>Сумма для перевода</h3>
+        <p id="usd-result"></p>
+    </div>
+    <input type="text" size="40" onkeyup="calcusd(this)" >
+    <div>
+        <p id="eur-result"></p>
+    </div>
+    
+</body>
+
+<script>
+    var excangeRatesUSD;
+    var excangeRatesEUR;
+
+    var xhr = new XMLHttpRequest();
+    var doc;
+
+    xhr.open('GET', 'http://www.banki.ru/products/currency/cb/', true);
+    xhr.onload = function () {
+        document.getElementById("demo").innerHTML = this.responseText;
+        excangeRatesUSD = document.getElementById("demo").querySelector('[data-currency-code="USD"] td:nth-child(4)').textContent;
+        excangeRatesEUR = document.getElementById("demo").querySelector('[data-currency-code="EUR"] td:nth-child(4)').textContent;
+        
+        pUSD = document.getElementById("usd-exchange").querySelector('p');
+        pUSD.innerHTML = excangeRatesUSD;
+
+        pEUR = document.getElementById("eur-exchange").querySelector('p');
+        pEUR.innerHTML = excangeRatesEUR;
+
+        document.getElementById("demo").remove()
+
+        var usd = rub / excangeRatesUSD;
+        var eur = rub / excangeRatesEUR;
+    }
+
+    xhr.onerror = function () {
+        alert('Ошибка ' + this.status);
+    }
+
+    xhr.send();
+    function calcusd(f){
+        var usd = f.value / excangeRatesUSD;
+        document.getElementById("usd-result").innerHTML = usd;
+        
+        var eur = f.value / excangeRatesEUR;
+        document.getElementById("eur-result").innerHTML = eur;
+    }
+</script>
+
+</html>
